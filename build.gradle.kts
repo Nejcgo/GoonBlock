@@ -38,6 +38,7 @@ loom {
                 // This argument causes a crash on macOS
                 vmArgs.remove("-XstartOnFirstThread")
             }
+            property("devauth.enabled", "true")
         }
         remove(getByName("server"))
     }
