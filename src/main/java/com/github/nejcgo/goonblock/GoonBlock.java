@@ -1,5 +1,6 @@
 package com.github.nejcgo.goonblock;
 
+import com.github.nejcgo.goonblock.client.gui.LobotomyRenderer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -30,6 +31,10 @@ public class GoonBlock {
 
         // Register event listeners
         MinecraftForge.EVENT_BUS.register(new BloodRushListener(bloodRushManager));
+        System.out.println("[GoonBlock] BloodRushListener registered.");
         MinecraftForge.EVENT_BUS.register(new WaifuOverlayRenderer(bloodRushManager));
+        System.out.println("[GoonBlock] WaifuOverlayRenderer registered.");
+        MinecraftForge.EVENT_BUS.register(new LobotomyRenderer(bloodRushManager));
+        System.out.println("[GoonBlock] LobotomyRenderer registered.");
     }
 }

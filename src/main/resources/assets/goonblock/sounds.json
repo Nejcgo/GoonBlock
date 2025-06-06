@@ -1,0 +1,10 @@
+{
+
+
+  "effects.lobotomySfx": {
+    "category": "master",
+    "sounds": [
+      "goonblock:effects/lobotomySfx"
+    ]
+  }
+}

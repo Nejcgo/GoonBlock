@@ -1,6 +1,8 @@
 package com.github.nejcgo.goonblock.event; // Your package
 
+import com.github.nejcgo.goonblock.client.gui.LobotomyRenderer;
 import com.github.nejcgo.goonblock.util.BloodRushManager; // Your package
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
@@ -42,6 +44,7 @@ public class BloodRushListener {
 
 
     public BloodRushListener(BloodRushManager manager) {
+        System.out.println("[GoonBlock] BloodRushListener CONSTRUCTOR CALLED!");
         this.manager = manager;
         MinecraftForge.EVENT_BUS.register(this); // Register for TickEvents if not done elsewhere
     }
@@ -73,10 +76,11 @@ public class BloodRushListener {
                     ScorePlayerTeam team = scoreboard.getPlayersTeam(score.getPlayerName());
                     String line = ScorePlayerTeam.formatPlayerName(team, score.getPlayerName());
                     String cleanedLine = StringUtils.stripControlCodes(line); // Remove color codes
+                    String sanitizedLine = cleanedLine.replaceAll("[^a-zA-Z0-9\\s()-]", ""); // Keeps letters, numbers, spaces, parentheses, hyphens. Removes others.
+                    // System.out.println("[GoonBlock SCOREDUMP SANITIZED] " + sanitizedLine); // See what this looks like
 
-                    // Example: "◎ The Catacombs (F7)"
-                    if (cleanedLine.contains("The Catacombs")) {
-                        // You could even extract the floor (e.g., "(F7)") here if needed
+                    if (sanitizedLine.contains("The Catacombs")) {
+                        System.out.println("[GoonBlock] 'The Catacombs' (Sanitized) FOUND in scoreboard line!");
                         return true;
                     }
                 }
@@ -107,13 +111,8 @@ public class BloodRushListener {
             }
 
             // ---- BLOOD RUSH START ----
-            if (cleanMessage.startsWith("§e[NPC] §bMort§f:")) {
-                if (cleanMessage.contains("Good luck.") ||
-                        cleanMessage.contains("I've knocked down those pillars") ||
-                        cleanMessage.contains("You have awoken me") || // Add more specific Watcher lines
-                        cleanMessage.contains("Let's see how you handle this!")) {
+            if (cleanMessage.startsWith("Starting in 1 second.")) {
                     manager.startBloodRush();
-                }
             }
 
             // ---- BLOOD RUSH END ----
@@ -126,16 +125,16 @@ public class BloodRushListener {
                 manager.endBloodRush();
             }
 
-
             // ---- DEATH DETECTION ----
             if (manager.isInBloodRush() && Minecraft.getMinecraft().thePlayer != null) {
-                if (cleanMessage.startsWith(SKULL_ICON + " You ") &&
+                if (cleanMessage.startsWith(" " + SKULL_ICON + " You ") &&
                         (cleanMessage.contains("died") || cleanMessage.contains("were killed by") || cleanMessage.contains("fell")) &&
                         !rawMessage.matches(".*§r§7<.*>.*") && // Exclude common player "<Name>: " prefixes
-                        !rawMessage.matches(".*\\[.*\\] .*:") && // Exclude common rank "[Rank] Name:" prefixes
-                        !cleanMessage.toLowerCase().contains(Minecraft.getMinecraft().thePlayer.getName().toLowerCase() + ":") // further exclude if player name is part of a chat message
+                        !rawMessage.matches(".*\\[.*\\] .*:")  // Exclude common rank "[Rank] Name:" prefixes
                 ) {
                     manager.incrementDeaths();
+                    manager.activateLobotomyImageEffect();
+                    Minecraft.getMinecraft().thePlayer.playSound("goonblock/sounds/lobotomySfx.mp3", 1.0f, 1.0f);
                     System.out.println("Player death detected during blood rush: " + cleanMessage);
                 }
             }
