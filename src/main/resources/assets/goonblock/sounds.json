@@ -1,10 +1,14 @@
 {
-
-
   "effects.lobotomySfx": {
     "category": "master",
     "sounds": [
       "goonblock:effects/lobotomySfx"
+    ]
+  },
+  "effects.jumpscareSfx": {
+    "category": "master",
+    "sounds": [
+      "goonblock:effects/jumpscareSfx"
     ]
   }
 }
