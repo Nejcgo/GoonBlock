@@ -1,7 +1,5 @@
 # THIS MOD IS STILL WIP, DON'T EXPECT ANYTHING TO WORK
 
-# !GOON MOD GOON MOD GOON MOD!
-
 Absolutely makes dungeons worth it :3.
 
 ## Installation
