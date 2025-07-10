@@ -28,7 +28,7 @@ public class GoonBlock {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         // Config loading could go here
-        CustomSongManager.initialize(event.getModConfigurationDirectory());
+        CustomSongManager.initialize();
     }
 
     @EventHandler

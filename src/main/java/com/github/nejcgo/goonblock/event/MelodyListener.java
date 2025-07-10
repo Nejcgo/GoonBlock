@@ -58,7 +58,7 @@ public class MelodyListener {
                 // We don't need to close the current screen, displayGuiScreen does it for us.
                 Minecraft.getMinecraft().displayGuiScreen(new CustomHarpGui(songToPlay));
             } else {
-                System.err.println("Could not find song 'my_first_song' to play!");
+                System.err.println("Could not find song 'mesmerizer' to play!");
             }
         }
     }

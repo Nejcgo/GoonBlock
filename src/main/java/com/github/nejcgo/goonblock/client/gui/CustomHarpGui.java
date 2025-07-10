@@ -2,14 +2,22 @@ package com.github.nejcgo.goonblock.client.gui;
 
 import com.github.nejcgo.goonblock.classes.CustomSong;
 import com.github.nejcgo.goonblock.classes.HarpNote;
+import com.github.nejcgo.goonblock.util.GoonblockFunctions;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 import java.awt.Color;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomHarpGui extends GuiScreen {
 
@@ -17,7 +25,7 @@ public class CustomHarpGui extends GuiScreen {
     private long songStartTime;
 
     // GUI layout constants
-    private final int TRACK_COUNT = 9;
+    private final int TRACK_COUNT = 7;
     private int trackWidth;
     private int tracksStartX;
     private int targetLineY;
@@ -25,6 +33,26 @@ public class CustomHarpGui extends GuiScreen {
     private int stepCount;
     private int stepTime;
     private int waitTime;
+    private long songLengthMs;
+
+    private RenderItem itemRenderer;
+
+    private List<ItemStack> woolList = new ArrayList<>();
+    private List<ItemStack> paneList = new ArrayList<>();
+    private ItemStack quartzBlock;
+
+    private Color backgroundColour = new Color(144, 144, 144);
+
+    enum colours {
+        pink,
+        yellow,
+        lime,
+        green,
+        purple,
+        blue,
+        lightBlue,
+        black
+    }
 
     // harp texture is 176*186
     int xSize = 176;
@@ -43,17 +71,43 @@ public class CustomHarpGui extends GuiScreen {
 
         // Setup layout based on screen size
         this.trackWidth = 18; // Add some padding on sides
-        this.tracksStartX = this.width / 2 - (trackWidth * TRACK_COUNT) / 2;
-        this.targetLineY = this.height - 233;
+        this.tracksStartX = this.width / 2 - (trackWidth * TRACK_COUNT) / 2 + 1;
+        this.targetLineY = (this.height / 2) + (ySize / 2) - 25;
         this.noteSpawnY = 26;
         this.stepCount = 8;
         this.stepTime = Math.round((60f/(song.bpm * 2)) * 1000); // time between steps in ms
         this.waitTime = 2000;
 
+        this.itemRenderer = mc.getRenderItem();
+
+        woolList.add(new ItemStack(Blocks.wool, 1, 6));
+        woolList.add(new ItemStack(Blocks.wool, 1, 4));
+        woolList.add(new ItemStack(Blocks.wool, 1, 5));
+        woolList.add(new ItemStack(Blocks.wool, 1, 13));
+        woolList.add(new ItemStack(Blocks.wool, 1, 10));
+        woolList.add(new ItemStack(Blocks.wool, 1, 11));
+        woolList.add(new ItemStack(Blocks.wool, 1, 3));
+        woolList.add(new ItemStack(Blocks.wool, 1, 15));
+
+        paneList.add(new ItemStack(Blocks.stained_glass_pane, 1, 6));
+        paneList.add(new ItemStack(Blocks.stained_glass_pane, 1, 4));
+        paneList.add(new ItemStack(Blocks.stained_glass_pane, 1, 5));
+        paneList.add(new ItemStack(Blocks.stained_glass_pane, 1, 13));
+        paneList.add(new ItemStack(Blocks.stained_glass_pane, 1, 10));
+        paneList.add(new ItemStack(Blocks.stained_glass_pane, 1, 11));
+        paneList.add(new ItemStack(Blocks.stained_glass_pane, 1, 3));
+        paneList.add(new ItemStack(Blocks.stained_glass_pane, 1, 15));
+
+        quartzBlock = new ItemStack(Blocks.quartz_block);
+
+        songLengthMs = 0L;
 
         for (HarpNote note : song.notes) {
             note.hit = false;
             note.missed = false;
+            if(songLengthMs < note.offset){
+                songLengthMs = note.offset;
+            }
         }
     }
 
@@ -69,6 +123,19 @@ public class CustomHarpGui extends GuiScreen {
         // Draw song info
         String title = song.name + " - by " + song.author;
         drawCenteredString(this.fontRendererObj, title, this.width / 2, 10, 0xFFFFFF);
+    }
+
+    @Override
+    public void updateScreen(){
+        long elapsedTime = System.currentTimeMillis() - songStartTime;
+
+        if(elapsedTime > songLengthMs + waitTime + 2000){
+            this.mc.thePlayer.playSound("random.levelup", 3f, 1f);
+            GoonblockFunctions.sendChatMessage(mc,"§d[Harp] §aSong completed!");
+            GoonblockFunctions.sendChatMessage(mc,"§d[Harp] §fYou suck §a§lass §fmy boy!");
+
+            mc.displayGuiScreen(null);
+        }
     }
 
     private void drawTracks() {
@@ -90,34 +157,39 @@ public class CustomHarpGui extends GuiScreen {
 
         // Draw the target line
         drawRect(tracksStartX, targetLineY - 1, tracksStartX + trackWidth * TRACK_COUNT, targetLineY + 1, Color.CYAN.getRGB());
+
+
     }
 
     private void drawFallingNotes(long elapsedTime) {
-        double curStep = Math.floor(elapsedTime / stepTime);
+        double curStep = Math.floor((double) elapsedTime / stepTime);
+
+        RenderHelper.enableGUIStandardItemLighting();
+        GlStateManager.enableRescaleNormal();
 
         for (HarpNote note : song.notes) {
             if (note.hit) continue; // Don't draw notes that have been successfully hit
 
-            long noteOffsetMs = note.offset * 50L;
+            long noteOffsetMs = note.offset;
             long timeUntilHit = noteOffsetMs - elapsedTime;
-            double noteStep = Math.floor(noteOffsetMs / stepTime) - curStep;
+            double noteStep = Math.floor((double) noteOffsetMs / stepTime) - curStep;
 
             // Check if note should be visible
-            if (timeUntilHit <= song.noteDurationMs && timeUntilHit > -200) { // Keep on screen briefly after passing
+            if (timeUntilHit <= song.noteDurationMs && timeUntilHit > -200 && noteStep < 8) { // Keep on screen briefly after passing
 
                 // Calculate position
                 float progress = 1.0f - ((float)timeUntilHit / song.noteDurationMs);
-                int y = (int) Math.round(targetLineY - (noteStep * 18));
-                int x = tracksStartX + note.track * trackWidth;
+                int y = (int) (((double) (this.height - this.xSize) / 2) + 147 - (noteStep * 18));
+                int x = tracksStartX + (note.track * trackWidth) ;
 
-                // Draw the note
-                int noteColor = note.missed ? Color.RED.getRGB() : Color.GREEN.getRGB();
-                drawRect(x + 2, y - 9, x + trackWidth - 2, y + 9, noteColor);
+                // Draw the note bg
+                drawRect(x, y - 8, x + 16, y + 8, backgroundColour.getRGB());
 
-                // Auto-play and mark as missed if player doesn't hit it in time
-                if (timeUntilHit < -100 && !note.missed) { // 100ms tolerance for being "late"
-                    note.missed = true;
-                    playNoteSound(note.pitch); // Play sound so user hears the missed note
+                int woolColour = note.track < 7 ? note.track : 0;
+                if (noteStep != 0) {
+                    itemRenderer.renderItemIntoGUI(woolList.get(woolColour), x, y - 9);
+                } else {
+                    itemRenderer.renderItemIntoGUI(quartzBlock, x, y - 9);
                 }
             }
         }
@@ -126,19 +198,15 @@ public class CustomHarpGui extends GuiScreen {
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         if (mouseButton == 0) { // Left click
-            long elapsedTime = System.currentTimeMillis() - songStartTime;
+            System.out.println("Clicked inside harp GUI!");
+            long elapsedTime = System.currentTimeMillis() - songStartTime - waitTime;
 
-            // Is the click in the "hittable" vertical area?
-            if (mouseY > targetLineY - 30 && mouseY < targetLineY + 30) {
-                // Which track was clicked?
-                if (mouseX > tracksStartX && mouseX < tracksStartX + trackWidth * TRACK_COUNT) {
-                    HarpNote bestNoteToHit = getHarpNote(mouseX, elapsedTime);
-
-                    if (bestNoteToHit != null) {
-                        bestNoteToHit.hit = true;
-                        playNoteSound(bestNoteToHit.pitch);
-                        // You could add particle effects or "Perfect!" text here
-                    }
+            if (mouseX > tracksStartX && mouseX < tracksStartX + trackWidth * TRACK_COUNT) {
+                HarpNote bestNoteToHit = getHarpNote(mouseX, elapsedTime);
+                if (bestNoteToHit != null) {
+                    bestNoteToHit.hit = true;
+                    playNoteSound(bestNoteToHit.pitch);
+                    // You could add particle effects or "Perfect!" text here
                 }
             }
         }
@@ -165,7 +233,7 @@ public class CustomHarpGui extends GuiScreen {
 
     private void playNoteSound(int noteIndex) {
         float pitch = (float) Math.pow(2.0, (noteIndex - 12.0) / 12.0);
-        this.mc.thePlayer.playSound("note.harp", 1.5f, pitch);
+        this.mc.thePlayer.playSound("note.harp", 2f, pitch);
     }
 
     @Override
