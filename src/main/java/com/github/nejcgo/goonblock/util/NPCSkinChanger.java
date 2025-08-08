@@ -56,35 +56,35 @@ public class NPCSkinChanger {
 
     @SubscribeEvent
     public void onRenderPlayerPre(RenderPlayerEvent.Pre event) {
-        // Add our layer to the renderer if it doesn't already have it.
         addLayerToRenderer(event.renderer);
-
-        // If this specific NPC is toggled, hide the main model.
-        // Our custom layer will do the rendering instead.
-
-            event.renderer.getMainModel().setInvisible(true);
-
+        event.renderer.getMainModel().setInvisible(true);
     }
 
     // This helper method uses reflection to safely add our layer only once.
     private void addLayerToRenderer(RenderPlayer renderer) {
         try {
-            // We must look in the superclass (RenderLivingBase) for the field.
             Field layerRenderersField = renderer.getClass().getSuperclass().getDeclaredField(LAYER_RENDERERS_FIELD_NAME);
-            layerRenderersField.setAccessible(true); // Make the protected field accessible.
+            layerRenderersField.setAccessible(true);
             List<LayerRenderer> layers = (List<LayerRenderer>) layerRenderersField.get(renderer);
 
-            // Check if an instance of our layer is already in the list.
             boolean hasLayer = layers.stream().anyMatch(layer -> layer instanceof LayerCustomSkin);
 
             if (!hasLayer) {
-                // If not, add a new instance of our layer.
+                // Store original layers for restoration later
+                List<LayerRenderer> originalLayers = new ArrayList<>(layers);
+
+                // Remove skin-related layers (adjust class names as needed)
+                layers.removeIf(layer ->
+                        layer.getClass().getName().contains("LayerBipedArmor") ||
+                                layer.getClass().getName().contains("LayerHeldItem") ||
+                                layer.getClass().getName().contains("LayerArrow")
+                );
+
                 layers.add(new LayerCustomSkin(renderer));
                 System.out.println("GoonBlock Mod: Successfully injected custom skin layer.");
             }
 
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            // This would only happen if the mod is used in a very different environment.
+        } catch (Exception e) {
             System.err.println("GoonBlock Mod: CRITICAL - Could not access layer renderers field!");
             e.printStackTrace();
         }

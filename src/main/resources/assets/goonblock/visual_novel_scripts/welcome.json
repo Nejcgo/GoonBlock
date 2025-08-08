@@ -1,0 +1,44 @@
+[
+  {
+    "sprite": "goonyWelcome.png",
+    "name": "???",
+    "text": "Oh, welcome! Are you new to GoonBlock?",
+    "sound": "GOONY"
+  },
+  {
+    "sprite": "goonyWelcome.png",
+    "name": "???",
+    "text": "Great! Let's get you started with the mod. I'll guide you through everything!",
+    "sound": "GOONY"
+  },
+  {
+    "sprite": "goonyWelcome.png",
+    "name": "Goony",
+    "text": "So, for starters, my name is Gwendolyn Octavia... or you could just call me Goony...",
+    "sound": "GOONY"
+  },
+  {
+    "sprite": "goonyWelcome.png",
+    "name": "Goony",
+    "text": "GoonBlock will improve your skyblock experience like no mod ever has before. Just imagine it: 5 more harp songs to suffer through, and...",
+    "sound": "GOONY"
+  },
+  {
+    "sprite": "goonyWelcome.png",
+    "name": "Goony",
+    "text": "Well... maybe I shouldn't spoil it.",
+    "sound": "GOONY"
+  },
+  {
+    "sprite": "goonyWelcome.png",
+    "name": "Goony",
+    "text": "How the mod is now, everything but the really insane stuff is enabled. To change this, use /goon to change your config.",
+    "sound": "GOONY"
+  },
+  {
+    "sprite": "goonyWelcome.png",
+    "name": "Goony",
+    "text": "So yeah, happy gooning~",
+    "sound": "GOONY"
+  }
+]
