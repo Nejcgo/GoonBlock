@@ -4,6 +4,7 @@ import com.github.nejcgo.goonblock.client.gui.*;
 import com.github.nejcgo.goonblock.event.JumpscareListener;
 import com.github.nejcgo.goonblock.event.MelodyListener;
 import com.github.nejcgo.goonblock.util.CustomSongManager;
+import com.github.nejcgo.goonblock.util.NPCSkinChanger;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -46,6 +47,7 @@ public class GoonBlock {
         MinecraftForge.EVENT_BUS.register(new JumpscareListener(jumpscareRenderer));
         MinecraftForge.EVENT_BUS.register(melodyListener);
         MinecraftForge.EVENT_BUS.register(new MelodyRenderer(melodyListener));
+        MinecraftForge.EVENT_BUS.register(new NPCSkinChanger());
     }
 
     @EventHandler
