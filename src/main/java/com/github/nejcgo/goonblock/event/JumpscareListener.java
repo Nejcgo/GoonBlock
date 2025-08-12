@@ -25,7 +25,7 @@ public class JumpscareListener {
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if(mc.thePlayer != null) {
             if (mc.thePlayer.ticksExisted % 20 == 0) {
-                if (random.nextInt(10000) == 0) {
+                if (random.nextInt(100000) == 0) {
                     jumpscareRenderer.startSpriteSheetAnimation();
                 }
             }

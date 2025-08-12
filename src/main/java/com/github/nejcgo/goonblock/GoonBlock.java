@@ -5,8 +5,10 @@ import com.github.nejcgo.goonblock.event.JumpscareListener;
 import com.github.nejcgo.goonblock.event.MelodyListener;
 import com.github.nejcgo.goonblock.util.CustomSongManager;
 import com.github.nejcgo.goonblock.util.NPCSkinChanger;
+import com.github.nejcgo.goonblock.util.VisualNovelManager;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -15,6 +17,9 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import com.github.nejcgo.goonblock.event.BloodRushListener;
 import com.github.nejcgo.goonblock.util.BloodRushManager;
+import scala.collection.parallel.ParIterableLike;
+
+import java.io.File;
 
 @Mod(modid = GoonBlock.MODID, version = GoonBlock.VERSION, name = GoonBlock.NAME, clientSideOnly = true)
 public class GoonBlock {
@@ -26,10 +31,26 @@ public class GoonBlock {
     public static JumpscareRenderer jumpscareRenderer;
     public static MelodyListener melodyListener;
 
+    public static Configuration config;
+    public static boolean hasShownFirstTimeMessage;
+
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         // Config loading could go here
         CustomSongManager.initialize();
+
+        File configFile = event.getSuggestedConfigurationFile();
+        config = new Configuration(configFile);
+        config.load();
+
+        // Define your property
+        hasShownFirstTimeMessage = config.getBoolean("hasShownFirstTimeMessage", "general", false, "Set to true after the first-time welcome message has been shown.");
+
+        // Save the configuration if it has changed
+        if (config.hasChanged()) {
+            config.save();
+        }
     }
 
     @EventHandler
@@ -48,6 +69,7 @@ public class GoonBlock {
         MinecraftForge.EVENT_BUS.register(melodyListener);
         MinecraftForge.EVENT_BUS.register(new MelodyRenderer(melodyListener));
         MinecraftForge.EVENT_BUS.register(new NPCSkinChanger());
+        MinecraftForge.EVENT_BUS.register(new VisualNovelManager());
     }
 
     @EventHandler
