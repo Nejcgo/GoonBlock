@@ -15,6 +15,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
+import java.util.List;
+import java.util.Random;
+
 import static net.minecraft.client.gui.Gui.drawScaledCustomSizeModalRect;
 
 
@@ -40,6 +43,8 @@ public class ScriptRenderer {
     private int tickCounter;
     private final int TICKS_PER_CHARACTER = 2; // Lower is faster, higher is slower
     private boolean isPageFinished;
+
+    Random random = new Random();
 
     // The sound to play when a character appears
     private final String soundEffect = "random.orb";
@@ -117,7 +122,9 @@ public class ScriptRenderer {
             );
 
             FontRenderer font = mc.fontRendererObj;
-            font.drawStringWithShadow(visibleText, ((float) screenWidth / 2) - 100, ((float) screenHeight / 2) + 100, 0xFFFFFF); // Example coordinates and color
+            if (visibleText != null) {
+                drawStringWithLineBreaks(visibleText, ((float) (screenWidth - textBoxWidth) / 2) + 48, ((float) screenHeight / 2) + 100, 0xFFFFFF, font, 264); // Example coordinates and color
+            }
         }
     }
 
@@ -141,7 +148,7 @@ public class ScriptRenderer {
                 // Play the typing sound (but not for spaces)
                 try {
                     if (characterIndex < fullTextForPage.length() && fullTextForPage.charAt(characterIndex - 1) != ' ') {
-                        Minecraft.getMinecraft().thePlayer.playSound(soundEffect, 0.5F, 1.5F);
+                        mc.thePlayer.playSound(soundEffect, 0.5F, 1F + random.nextFloat()/2);
                     }
                 } catch(Exception e) {
                     finish();
@@ -196,6 +203,16 @@ public class ScriptRenderer {
         this.isPageFinished = true;
         this.visibleText = this.fullTextForPage;
         this.characterIndex = this.fullTextForPage.length();
+    }
+
+    private void drawStringWithLineBreaks(String string, float x, float y, int colour, FontRenderer font, int width) {
+        List<String> lines = font.listFormattedStringToWidth(string, width);
+
+        for(String line : lines) {
+            font.drawStringWithShadow(line, x, y, colour);
+
+            y += font.FONT_HEIGHT;
+        }
     }
 
     /** Call this method to finish the script renderer and clean up.
