@@ -2,6 +2,11 @@ package com.github.nejcgo.goonblock.util;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
@@ -10,6 +15,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StringUtils;
 
 import java.util.Collection;
+import java.util.List;
 
 public class GoonblockFunctions {
 
@@ -31,7 +37,7 @@ public class GoonblockFunctions {
      * @param mc The minecraft instance
      * @return bool
      */
-    public static boolean getSkyblock(Minecraft mc){
+    public static boolean getSkyblock(Minecraft mc) {
         try {
             Scoreboard scoreboard = mc.theWorld.getScoreboard();
             ScoreObjective sidebarObjective = scoreboard.getObjectiveInDisplaySlot(1); // Slot 1 is the sidebar
@@ -57,7 +63,7 @@ public class GoonblockFunctions {
      * @param mc The minecraft instance
      * @return bool
      */
-    public static boolean getHypixel(Minecraft mc){
+    public static boolean getHypixel(Minecraft mc) {
         if (mc.isSingleplayer()) {
             return false;
         }
@@ -71,12 +77,64 @@ public class GoonblockFunctions {
         return false;
     }
 
+    public static NBTTagCompound getNbtCompound(ItemStack stack) {
+        if (stack.hasTagCompound()) {
+            return stack.getTagCompound();
+        } else {
+            NBTTagCompound tag = new NBTTagCompound();
+            stack.setTagCompound(tag);
+            return tag;
+        }
+    }
+
+    public static ItemStack addEnchantmentGlint(ItemStack stack) {
+        NBTTagCompound tag = getNbtCompound(stack);
+        tag.setTag("ench", new NBTTagList());
+
+        stack.setTagCompound(tag);
+
+        return stack;
+    }
+
+    /** Sets the name and lore of an ItemStack
+     *
+     * @param stack The ItemStack you are setting the name of
+     * @param name The desired item name
+     * @param loreList List of lore lines on the item
+     * @return ItemStack
+     */
+    public static ItemStack setDisplayName(ItemStack stack, String name, List<String> loreList) {
+        NBTTagCompound mainTag = getNbtCompound(stack);
+
+        NBTTagCompound displayTag;
+        if (mainTag.hasKey("display", 10)) { // 10 is the NBT ID for a Compound Tag
+            displayTag = mainTag.getCompoundTag("display");
+        } else {
+            displayTag = new NBTTagCompound();
+        }
+
+        displayTag.setString("Name", name);
+
+        NBTTagList loreTag = new NBTTagList();
+        for (String s : loreList) {
+            loreTag.appendTag(new NBTTagString(s));
+        }
+
+        displayTag.setTag("Lore", loreTag);
+
+        mainTag.setTag("display", displayTag);
+
+        stack.setTagCompound(mainTag);
+
+        return stack;
+    }
+
     /** Returns the position in an ease out back position, starting at 0, and ending at 1.
      *
      * @param x Ranges from 0 to 1
      * @return double
      */
-    public static double easeOutBack(double x){
+    public static double easeOutBack(double x) {
         if(x > 1) return 1;
         double c1 = 1.70158;
         double c3 = c1 + 1;

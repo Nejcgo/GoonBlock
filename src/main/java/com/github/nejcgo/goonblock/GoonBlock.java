@@ -1,5 +1,6 @@
 package com.github.nejcgo.goonblock;
 
+import com.github.nejcgo.goonblock.classes.Script;
 import com.github.nejcgo.goonblock.client.gui.*;
 import com.github.nejcgo.goonblock.event.JumpscareListener;
 import com.github.nejcgo.goonblock.event.MelodyListener;
@@ -70,6 +71,7 @@ public class GoonBlock {
         MinecraftForge.EVENT_BUS.register(new MelodyRenderer(melodyListener));
         MinecraftForge.EVENT_BUS.register(new NPCSkinChanger());
         MinecraftForge.EVENT_BUS.register(new VisualNovelManager());
+
     }
 
     @EventHandler

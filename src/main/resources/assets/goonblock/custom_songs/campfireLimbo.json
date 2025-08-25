@@ -1,0 +1,434 @@
+{
+  "id": "campfireLimbo",
+  "name": "Through the Campfire",
+  "author": "",
+  "noteDurationMs": 2000,
+  "bpm": 120,
+  "notes": [
+    {
+      "offset": 0,
+      "track": 2,
+      "pitch": 9
+    },
+    {
+      "offset": 500,
+      "track": 0,
+      "pitch": 6
+    },
+    {
+      "offset": 750,
+      "track": 2,
+      "pitch": 9
+    },
+    {
+      "offset": 1250,
+      "track": 0,
+      "pitch": 6
+    },
+    {
+      "offset": 1500,
+      "track": 2,
+      "pitch": 9
+    },
+    {
+      "offset": 1750,
+      "track": 0,
+      "pitch": 6
+    },
+    {
+      "offset": 2000,
+      "track": 2,
+      "pitch": 9
+    },
+    {
+      "offset": 2250,
+      "track": 2,
+      "pitch": 9
+    },
+    {
+      "offset": 2500,
+      "track": 0,
+      "pitch": 6
+    },
+    {
+      "offset": 2750,
+      "track": 2,
+      "pitch": 9
+    },
+    {
+      "offset": 3250,
+      "track": 0,
+      "pitch": 6
+    },
+    {
+      "offset": 3500,
+      "track": 2,
+      "pitch": 9
+    },
+    {
+      "offset": 3750,
+      "track": 0,
+      "pitch": 6
+    },
+    {
+      "offset": 4000,
+      "track": 5,
+      "pitch": 13
+    },
+    {
+      "offset": 4500,
+      "track": 2,
+      "pitch": 9
+    },
+    {
+      "offset": 4750,
+      "track": 5,
+      "pitch": 13
+    },
+    {
+      "offset": 5250,
+      "track": 2,
+      "pitch": 9
+    },
+    {
+      "offset": 5500,
+      "track": 5,
+      "pitch": 13
+    },
+    {
+      "offset": 5750,
+      "track": 2,
+      "pitch": 9
+    },
+    {
+      "offset": 6000,
+      "track": 5,
+      "pitch": 13
+    },
+    {
+      "offset": 6250,
+      "track": 6,
+      "pitch": 14
+    },
+    {
+      "offset": 6500,
+      "track": 2,
+      "pitch": 9
+    },
+    {
+      "offset": 6750,
+      "track": 5,
+      "pitch": 13
+    },
+    {
+      "offset": 7250,
+      "track": 2,
+      "pitch": 9
+    },
+    {
+      "offset": 7500,
+      "track": 5,
+      "pitch": 13
+    },
+    {
+      "offset": 7750,
+      "track": 2,
+      "pitch": 9
+    },
+    {
+      "offset": 8000,
+      "track": 4,
+      "pitch": 11
+    },
+    {
+      "offset": 8500,
+      "track": 1,
+      "pitch": 8
+    },
+    {
+      "offset": 8750,
+      "track": 4,
+      "pitch": 11
+    },
+    {
+      "offset": 9250,
+      "track": 1,
+      "pitch": 8
+    },
+    {
+      "offset": 9500,
+      "track": 4,
+      "pitch": 11
+    },
+    {
+      "offset": 9750,
+      "track": 1,
+      "pitch": 8
+    },
+    {
+      "offset": 10000,
+      "track": 4,
+      "pitch": 11
+    },
+    {
+      "offset": 10250,
+      "track": 4,
+      "pitch": 11
+    },
+    {
+      "offset": 10500,
+      "track": 1,
+      "pitch": 8
+    },
+    {
+      "offset": 10750,
+      "track": 4,
+      "pitch": 11
+    },
+    {
+      "offset": 11250,
+      "track": 1,
+      "pitch": 8
+    },
+    {
+      "offset": 11500,
+      "track": 3,
+      "pitch": 9
+    },
+    {
+      "offset": 11750,
+      "track": 2,
+      "pitch": 8
+    },
+    {
+      "offset": 12000,
+      "track": 1,
+      "pitch": 6
+    },
+    {
+      "offset": 12250,
+      "track": 2,
+      "pitch": 8
+    },
+    {
+      "offset": 12500,
+      "track": 1,
+      "pitch": 6
+    },
+    {
+      "offset": 12750,
+      "track": 0,
+      "pitch": 4
+    },
+    {
+      "offset": 13250,
+      "track": 1,
+      "pitch": 6
+    },
+    {
+      "offset": 13500,
+      "track": 6,
+      "pitch": 18
+    },
+    {
+      "offset": 15000,
+      "track": 3,
+      "pitch": 13
+    },
+    {
+      "offset": 15750,
+      "track": 5,
+      "pitch": 16
+    },
+    {
+      "offset": 16250,
+      "track": 4,
+      "pitch": 14
+    },
+    {
+      "offset": 16500,
+      "track": 3,
+      "pitch": 13
+    },
+    {
+      "offset": 16750,
+      "track": 4,
+      "pitch": 14
+    },
+    {
+      "offset": 17000,
+      "track": 3,
+      "pitch": 13
+    },
+    {
+      "offset": 17500,
+      "track": 2,
+      "pitch": 11
+    },
+    {
+      "offset": 18000,
+      "track": 1,
+      "pitch": 9
+    },
+    {
+      "offset": 18500,
+      "track": 3,
+      "pitch": 13
+    },
+    {
+      "offset": 19000,
+      "track": 2,
+      "pitch": 11
+    },
+    {
+      "offset": 19500,
+      "track": 1,
+      "pitch": 9
+    },
+    {
+      "offset": 20000,
+      "track": 0,
+      "pitch": 8
+    },
+    {
+      "offset": 20500,
+      "track": 5,
+      "pitch": 11
+    },
+    {
+      "offset": 21000,
+      "track": 4,
+      "pitch": 9
+    },
+    {
+      "offset": 21500,
+      "track": 3,
+      "pitch": 8
+    },
+    {
+      "offset": 22000,
+      "track": 2,
+      "pitch": 6
+    },
+    {
+      "offset": 22500,
+      "track": 4,
+      "pitch": 9
+    },
+    {
+      "offset": 23000,
+      "track": 3,
+      "pitch": 8
+    },
+    {
+      "offset": 23500,
+      "track": 0,
+      "pitch": 1
+    },
+    {
+      "offset": 24000,
+      "track": 2,
+      "pitch": 4
+    },
+    {
+      "offset": 24500,
+      "track": 0,
+      "pitch": 1
+    },
+    {
+      "offset": 25000,
+      "track": 4,
+      "pitch": 13
+    },
+    {
+      "offset": 25500,
+      "track": 2,
+      "pitch": 11
+    },
+    {
+      "offset": 26250,
+      "track": 5,
+      "pitch": 14
+    },
+    {
+      "offset": 26500,
+      "track": 4,
+      "pitch": 13
+    },
+    {
+      "offset": 27000,
+      "track": 3,
+      "pitch": 11
+    },
+    {
+      "offset": 27500,
+      "track": 2,
+      "pitch": 9
+    },
+    {
+      "offset": 28000,
+      "track": 1,
+      "pitch": 8
+    },
+    {
+      "offset": 28500,
+      "track": 3,
+      "pitch": 11
+    },
+    {
+      "offset": 29000,
+      "track": 2,
+      "pitch": 9
+    },
+    {
+      "offset": 29500,
+      "track": 1,
+      "pitch": 8
+    },
+    {
+      "offset": 30000,
+      "track": 0,
+      "pitch": 6
+    },
+    {
+      "offset": 30500,
+      "track": 2,
+      "pitch": 9
+    },
+    {
+      "offset": 31000,
+      "track": 1,
+      "pitch": 8
+    },
+    {
+      "offset": 31750,
+      "track": 4,
+      "pitch": 9
+    },
+    {
+      "offset": 32000,
+      "track": 5,
+      "pitch": 11
+    },
+    {
+      "offset": 32250,
+      "track": 4,
+      "pitch": 9
+    },
+    {
+      "offset": 32500,
+      "track": 3,
+      "pitch": 8
+    },
+    {
+      "offset": 32750,
+      "track": 4,
+      "pitch": 9
+    },
+    {
+      "offset": 33000,
+      "track": 4,
+      "pitch": 9
+    }
+  ]
+}

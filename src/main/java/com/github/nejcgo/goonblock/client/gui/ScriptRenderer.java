@@ -6,6 +6,7 @@ import com.github.nejcgo.goonblock.util.GoonblockFunctions;
 import com.github.nejcgo.goonblock.util.VisualNovelManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -21,7 +22,7 @@ import java.util.Random;
 import static net.minecraft.client.gui.Gui.drawScaledCustomSizeModalRect;
 
 
-public class ScriptRenderer {
+public class ScriptRenderer extends GuiScreen {
     private Script script;
     private int currentPageIndex;
     private ResourceLocation sprite;
@@ -29,8 +30,7 @@ public class ScriptRenderer {
     private long startTime;
     private int phase; // 0 - coming up,  1 - script
 
-    private final double transitionLength = 2000;
-    private long currentTransitionTime;
+    private final double transitionLength = 800;
 
     private final ResourceLocation textBox;
 
@@ -40,8 +40,10 @@ public class ScriptRenderer {
     private String fullTextForPage;
     private String visibleText;
     private int characterIndex;
-    private int tickCounter;
-    private final int TICKS_PER_CHARACTER = 2; // Lower is faster, higher is slower
+    private int tickCounter = 0;
+    private int charCounter = 0;
+    private final int TICKS_PER_CHARACTER = 1;
+    private final int CHARS_PER_SOUND = 2;
     private boolean isPageFinished;
 
     Random random = new Random();
@@ -56,7 +58,6 @@ public class ScriptRenderer {
         this.currentPageIndex = 0;
         this.visibleText = "";
         this.startTime = System.currentTimeMillis();
-        this.currentTransitionTime = 0;
         this.phase = 0;
 
         ScriptPage currentPage = script.getPages().get(currentPageIndex);
@@ -65,7 +66,16 @@ public class ScriptRenderer {
         this.mc = Minecraft.getMinecraft();
 
         this.textBox = new ResourceLocation("goonblock", "textures/gui/visual/textBox.png");
-        this.sprite = new ResourceLocation("goonblock", "textures/gui/visual/" + currentPage.getSprite());
+        try {
+            this.sprite = new ResourceLocation("goonblock", "textures/gui/visual/" + currentPage.getSprite());
+        } catch(Exception e) {
+            this.sprite = new ResourceLocation("goonblock", "textures/gui/visual/troll.png");
+        }
+    }
+
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        drawDefaultBackground(); // Darken the background
     }
 
     @SubscribeEvent
@@ -141,14 +151,42 @@ public class ScriptRenderer {
             if (tickCounter >= TICKS_PER_CHARACTER) {
                 tickCounter = 0; // Reset the timer
 
+                // Slight pause on spaces, commas, and full stops
+                if(fullTextForPage.substring(0, characterIndex).endsWith(" ")) {
+                    tickCounter = -1;
+                    charCounter++;
+                }
+
+                if(fullTextForPage.substring(0, characterIndex).endsWith(",")) {
+                    tickCounter = -2;
+                    charCounter++;
+                }
+
+                if(fullTextForPage.substring(0, characterIndex).endsWith(".") || fullTextForPage.substring(0, characterIndex).endsWith("!") || fullTextForPage.substring(0, characterIndex).endsWith("?")) {
+                    tickCounter = -3;
+                    charCounter += 2;
+                }
+                // Skip formatting tags
+                if(fullTextForPage.substring(0, characterIndex).endsWith("§")) {
+                    characterIndex += 2;
+                }
+
                 // Add the next character from the full text to the visible text
                 characterIndex++;
-                visibleText = fullTextForPage.substring(0, characterIndex);
+                charCounter++;
+
+                try {
+                    visibleText = fullTextForPage.substring(0, characterIndex);
+                }catch(Exception e){
+                    characterIndex --;
+                    visibleText = fullTextForPage.substring(0, characterIndex);
+                }
 
                 // Play the typing sound (but not for spaces)
                 try {
-                    if (characterIndex < fullTextForPage.length() && fullTextForPage.charAt(characterIndex - 1) != ' ') {
+                    if (characterIndex < fullTextForPage.length() && fullTextForPage.charAt(characterIndex - 1) != ' ' && charCounter >= CHARS_PER_SOUND) {
                         mc.thePlayer.playSound(soundEffect, 0.5F, 1F + random.nextFloat()/2);
+                        charCounter = 0;
                     }
                 } catch(Exception e) {
                     finish();
@@ -194,8 +232,13 @@ public class ScriptRenderer {
         this.visibleText = "";
         this.characterIndex = 0;
         this.tickCounter = 0;
+        this.charCounter = 0;
         this.isPageFinished = false;
-        this.sprite = new ResourceLocation("goonblock", "textures/gui/visual/" + currentPage.getSprite());
+        try {
+            this.sprite = new ResourceLocation("goonblock", "textures/gui/visual/" + currentPage.getSprite());
+        } catch(Exception e) {
+            this.sprite = new ResourceLocation("goonblock", "textures/gui/visual/troll.png");
+        }
     }
 
     private void finishCurrentPage() {
@@ -220,6 +263,9 @@ public class ScriptRenderer {
      */
     public void finish() {
         MinecraftForge.EVENT_BUS.unregister(this);
+        phase = 2;
+
+        isPageFinished = true;
 
         if (VisualNovelManager.currentRenderer == this) {
             VisualNovelManager.currentRenderer = null;

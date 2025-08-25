@@ -155,10 +155,7 @@ public class CustomHarpGui extends GuiScreen {
                 ySize
         );
 
-        // Draw the target line
-        drawRect(tracksStartX, targetLineY - 1, tracksStartX + trackWidth * TRACK_COUNT, targetLineY + 1, Color.CYAN.getRGB());
-
-
+        //drawRect(tracksStartX, targetLineY - 1, tracksStartX + trackWidth * TRACK_COUNT, targetLineY + 1, Color.CYAN.getRGB());
     }
 
     private void drawFallingNotes(long elapsedTime) {
@@ -221,8 +218,8 @@ public class CustomHarpGui extends GuiScreen {
 
         for (HarpNote note : song.notes) {
             if (note.track == clickedTrack && !note.hit && !note.missed) {
-                long timeDiff = Math.abs(elapsedTime - note.offset);
-                if (timeDiff < 150 && timeDiff < smallestTimeDiff) { // 150ms hit window
+                long timeDiff = Math.abs(elapsedTime - note.offset + 50); // +50ms to make late hits more lenient
+                if (timeDiff < 250 && timeDiff < smallestTimeDiff) { // "250ms" hit window, uhuh, totally not a 200ms-300ms
                     smallestTimeDiff = timeDiff;
                     bestNoteToHit = note;
                 }
@@ -238,7 +235,7 @@ public class CustomHarpGui extends GuiScreen {
 
     @Override
     public boolean doesGuiPauseGame() {
-        return false; // So the world keeps ticking (and time flows)
+        return false; // So the world keeps ticking (and time flows) (hard ass line)
     }
 
     @Override

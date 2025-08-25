@@ -6,39 +6,39 @@
     "sound": "GOONY"
   },
   {
-    "sprite": "goonyWelcome.png",
+    "sprite": "goonyNeutral.png",
     "name": "???",
-    "text": "Great! Let's get you started with the mod. I'll guide you through everything!",
+    "text": "§6Great! §fLet's get you started with the mod. I'll guide you through everything!",
     "sound": "GOONY"
   },
   {
-    "sprite": "goonyWelcome.png",
+    "sprite": "goonyNeutralTalking.png",
     "name": "Goony",
-    "text": "So, for starters, my name is Gwendolyn Octavia... or you could just call me Goony...",
+    "text": "So, for starters, my name is§d Gwendolyn...§f or you could just call me§o Goony...§r",
     "sound": "GOONY"
   },
   {
-    "sprite": "goonyWelcome.png",
+    "sprite": "goonyChad.png",
     "name": "Goony",
-    "text": "GoonBlock will improve your skyblock experience like no mod ever has before. Just imagine it: 5 more harp songs to suffer through, and...",
+    "text": "GoonBlock will improve your Skyblock experience like no mod ever has before. Just imagine it:§o 5 more harp songs to suffer through, and...",
     "sound": "GOONY"
   },
   {
-    "sprite": "goonyWelcome.png",
+    "sprite": "goonyShiftyTalking.png",
     "name": "Goony",
     "text": "Well... maybe I shouldn't spoil it.",
     "sound": "GOONY"
   },
   {
-    "sprite": "goonyWelcome.png",
+    "sprite": "goonyNeutral.png",
     "name": "Goony",
-    "text": "How the mod is now, everything but the really insane stuff is enabled. To change this, use /goon to change your config.",
+    "text": "How the mod is now, everything but the really§c insane§f stuff is enabled. To change this, use /goon to change your config.",
     "sound": "GOONY"
   },
   {
-    "sprite": "goonyWelcome.png",
+    "sprite": "goonyChadTalking.png",
     "name": "Goony",
-    "text": "So yeah, happy gooning~",
+    "text": "So yeah,§d happy gooning~ ♥",
     "sound": "GOONY"
   }
 ]

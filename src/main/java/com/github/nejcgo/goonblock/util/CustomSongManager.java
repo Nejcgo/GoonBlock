@@ -23,7 +23,8 @@ public class CustomSongManager {
     // we must now explicitly list the songs we want to load.
     // The name here must match the filename in your resources (without .json).
     private static final List<String> INTERNAL_SONG_IDS = Arrays.asList(
-            "mesmerizer"
+            "mesmerizer",
+            "campfireLimbo"
     );
 
     /**

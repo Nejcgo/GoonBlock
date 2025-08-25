@@ -70,15 +70,13 @@ public class NPCSkinChanger {
             boolean hasLayer = layers.stream().anyMatch(layer -> layer instanceof LayerCustomSkin);
 
             if (!hasLayer) {
-                // Store original layers for restoration later
                 List<LayerRenderer> originalLayers = new ArrayList<>(layers);
 
-                // Remove skin-related layers (adjust class names as needed)
-                layers.removeIf(layer ->
-                        layer.getClass().getName().contains("LayerBipedArmor") ||
-                                layer.getClass().getName().contains("LayerHeldItem") ||
-                                layer.getClass().getName().contains("LayerArrow")
-                );
+                //layers.removeIf(layer ->
+                //        layer.getClass().getName().contains("LayerBipedArmor") ||
+                //                layer.getClass().getName().contains("LayerHeldItem") ||
+                //                layer.getClass().getName().contains("LayerArrow")
+                //);
 
                 layers.add(new LayerCustomSkin(renderer));
                 System.out.println("GoonBlock Mod: Successfully injected custom skin layer.");
@@ -92,7 +90,6 @@ public class NPCSkinChanger {
 
     @SubscribeEvent
     public void onRenderPlayerPost(RenderPlayerEvent.Post event) {
-        // This is crucial. ALWAYS set the model visibility back to false after rendering.
         event.renderer.getMainModel().setInvisible(false);
     }
 }
