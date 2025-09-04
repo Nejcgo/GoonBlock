@@ -2,6 +2,7 @@ package com.github.nejcgo.goonblock.event;// In your MelodyListener.java (or a n
 
 import com.github.nejcgo.goonblock.classes.CustomSong;
 import com.github.nejcgo.goonblock.client.gui.CustomHarpGui;
+import com.github.nejcgo.goonblock.client.gui.CustomSongSelect;
 import com.github.nejcgo.goonblock.util.CustomSongManager;
 import com.github.nejcgo.goonblock.util.GoonblockFunctions;
 import com.github.nejcgo.goonblock.util.GuiHelper;
@@ -14,6 +15,7 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Mouse;
 
@@ -102,13 +104,17 @@ public class MelodyListener {
         if(Mouse.getEventButton() == 0 && Mouse.getEventButtonState()){
             if(mouseX > buttonX && mouseX < buttonX+16 &&
                     mouseY > buttonY && mouseY < buttonY+16) {
-                CustomSong songToPlay = CustomSongManager.getSongById("mesmerizer");
-                if (songToPlay != null) {
-                    // We don't need to close the current screen, displayGuiScreen does it for us.
-                    Minecraft.getMinecraft().displayGuiScreen(new CustomHarpGui(songToPlay));
-                } else {
-                    System.err.println("Could not find song 'mesmerizer' to play!");
-                }
+                //CustomSong songToPlay = CustomSongManager.getSongById("mesmerizer");
+                //if (songToPlay != null) {
+                //    // We don't need to close the current screen, displayGuiScreen does it for us.
+                //    Minecraft.getMinecraft().displayGuiScreen(new CustomHarpGui(songToPlay));
+                //} else {
+                //    System.err.println("Could not find song 'mesmerizer' to play!");
+                //}
+
+                CustomSongSelect songSelect = new CustomSongSelect();
+                mc.displayGuiScreen(songSelect);
+                MinecraftForge.EVENT_BUS.register(songSelect);
             }
         }
     }

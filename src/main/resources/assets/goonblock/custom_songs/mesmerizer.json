@@ -1,6 +1,8 @@
 {
   "id": "mesmerizer",
   "name": "Mesmerizer",
+  "description": "I love yuri",
+  "Difficulty": "Extreme",
   "author": "Unknown",
   "noteDurationMs": 2000,
   "bpm": 180,

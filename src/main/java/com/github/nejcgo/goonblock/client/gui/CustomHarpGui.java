@@ -43,6 +43,8 @@ public class CustomHarpGui extends GuiScreen {
 
     private Color backgroundColour = new Color(144, 144, 144);
 
+    private Boolean isAuto = true;
+
     enum colours {
         pink,
         yellow,
@@ -202,8 +204,7 @@ public class CustomHarpGui extends GuiScreen {
                 HarpNote bestNoteToHit = getHarpNote(mouseX, elapsedTime);
                 if (bestNoteToHit != null) {
                     bestNoteToHit.hit = true;
-                    playNoteSound(bestNoteToHit.pitch);
-                    // You could add particle effects or "Perfect!" text here
+                    playNoteSound(bestNoteToHit.pitch, bestNoteToHit.customSound);
                 }
             }
         }
@@ -228,9 +229,13 @@ public class CustomHarpGui extends GuiScreen {
         return bestNoteToHit;
     }
 
-    private void playNoteSound(int noteIndex) {
+    private void playNoteSound(int noteIndex, String customSound) {
         float pitch = (float) Math.pow(2.0, (noteIndex - 12.0) / 12.0);
-        this.mc.thePlayer.playSound("note.harp", 2f, pitch);
+        if(customSound == null) {
+            this.mc.thePlayer.playSound("note.harp", 2f, pitch);
+        } else {
+            this.mc.thePlayer.playSound(customSound, 2f, pitch);
+        }
     }
 
     @Override

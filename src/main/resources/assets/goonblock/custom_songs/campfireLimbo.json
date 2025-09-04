@@ -1,6 +1,8 @@
 {
   "id": "campfireLimbo",
   "name": "Through the Campfire",
+  "description": "Banger",
+  "Difficulty": "Hard (memory)",
   "author": "",
   "noteDurationMs": 2000,
   "bpm": 120,

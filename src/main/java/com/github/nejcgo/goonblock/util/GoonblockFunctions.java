@@ -1,7 +1,9 @@
 package com.github.nejcgo.goonblock.util;
 
+import jline.internal.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -127,6 +129,53 @@ public class GoonblockFunctions {
         stack.setTagCompound(mainTag);
 
         return stack;
+    }
+
+    /** Renders the desired ItemStack into a slot in the standard chest GUI.
+     *
+     * @param item The item to render
+     * @param itemRenderer
+     * @param guiWidth
+     * @param guiHeight
+     * @param slot The slot to render the item to (0-53)
+     * @param numRows The amount of rows in the chest GUI
+     */
+    public static void renderItemIntoChestGuiSlot(ItemStack item, RenderItem itemRenderer, int guiWidth, int guiHeight, int slot, int numRows) {
+        int slotX = slot % 9;
+        int slotY = slot / 9;
+
+        // That's just how it is
+        int itemX = (guiWidth - 176) / 2 + 8 + slotX * 18;
+        int itemY = (guiHeight - 17 - 96 - numRows*18) / 2 + 18 + slotY * 18; // The chest GUI shifts slightly depending on the number of rows it has...
+
+        float ogZLevel = itemRenderer.zLevel;
+        itemRenderer.zLevel = 300.0f;
+
+        itemRenderer.renderItemIntoGUI(item, itemX, itemY);
+
+        itemRenderer.zLevel = ogZLevel;
+    }
+
+    /** Returns the slot the mouse is currently hovering over. Returns null if no slot is hovered.
+     *
+     * @param mouseX Precalculated X
+     * @param mouseY Precalculated Y
+     * @param guiWidth
+     * @param guiHeight
+     * @param numRows Number of rows in the chest GUI
+     * @return int or null
+     */
+    public static Integer getSlotFromMousePosition(int mouseX, int mouseY, int guiWidth, int guiHeight, int numRows) {
+        if(mouseX > (guiWidth - 176) / 2 + 6 && mouseY > (guiHeight - 17 - 96 - numRows*18) / 2 + 17) {
+            int slotX = (mouseX - ((guiWidth - 176) / 2 + 6)) / 18;
+            int slotY = (mouseY - ((guiHeight - 17 - 96 - numRows*18) / 2 + 17)) / 18;
+
+            int slot = 9*slotY + slotX;
+
+            return slot;
+        }
+
+        return null;
     }
 
     /** Returns the position in an ease out back position, starting at 0, and ending at 1.

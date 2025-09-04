@@ -5,7 +5,8 @@ public class HarpNote {
     public int track;
     public int pitch;
 
-    // Add flags for gameplay logic
+    public String customSound = null;
+
     public transient boolean hit = false;
     public transient boolean missed = false;
 }

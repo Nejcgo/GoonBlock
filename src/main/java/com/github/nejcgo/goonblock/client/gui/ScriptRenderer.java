@@ -149,7 +149,7 @@ public class ScriptRenderer extends GuiScreen {
 
             tickCounter++;
             if (tickCounter >= TICKS_PER_CHARACTER) {
-                tickCounter = 0; // Reset the timer
+                tickCounter = 0;
 
                 // Slight pause on spaces, commas, and full stops
                 if(fullTextForPage.substring(0, characterIndex).endsWith(" ")) {
@@ -166,20 +166,23 @@ public class ScriptRenderer extends GuiScreen {
                     tickCounter = -3;
                     charCounter += 2;
                 }
-                // Skip formatting tags
-                if(fullTextForPage.substring(0, characterIndex).endsWith("§")) {
-                    characterIndex += 2;
-                }
 
                 // Add the next character from the full text to the visible text
                 characterIndex++;
                 charCounter++;
 
+                // Skip formatting tags
+                try {
+                    while (fullTextForPage.substring(0, characterIndex).endsWith("§")) {
+                        characterIndex += 2;
+                    }
+                } catch (Exception ignored) {}
+
                 try {
                     visibleText = fullTextForPage.substring(0, characterIndex);
                 }catch(Exception e){
                     characterIndex --;
-                    visibleText = fullTextForPage.substring(0, characterIndex);
+                    visibleText = fullTextForPage;
                 }
 
                 // Play the typing sound (but not for spaces)

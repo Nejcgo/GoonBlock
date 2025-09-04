@@ -17,22 +17,19 @@ import java.util.Map;
 
 public class CustomSongManager {
 
-    private static final Map<String, CustomSong> loadedSongs = new HashMap<>();
+    public static final Map<String, CustomSong> loadedSongs = new HashMap<>();
 
-    // IMPORTANT: Since we can't scan a directory inside a JAR easily,
-    // we must now explicitly list the songs we want to load.
-    // The name here must match the filename in your resources (without .json).
+    // The name here must match the filename in resources (without .json).
     private static final List<String> INTERNAL_SONG_IDS = Arrays.asList(
             "mesmerizer",
-            "campfireLimbo"
+            "campfireLimbo",
+            "freedom"
     );
 
     /**
      * Initializes the song manager and loads all predefined internal songs.
-     * This should be called from your mod's main init/preInit method.
      */
     public static void initialize() {
-        // We no longer need the config directory. This method now handles everything.
         loadAllSongs();
     }
 
@@ -45,8 +42,6 @@ public class CustomSongManager {
         IResourceManager resourceManager = Minecraft.getMinecraft().getResourceManager();
 
         for (String songId : INTERNAL_SONG_IDS) {
-            // A ResourceLocation points to a file within the "assets" folder of a mod or resource pack.
-            // Format: new ResourceLocation("your_mod_id", "path/inside/assets/your_mod_id/file.name")
             ResourceLocation songLocation = new ResourceLocation("goonblock", "custom_songs/" + songId + ".json");
 
             System.out.println("GoonBlock: Attempting to load internal song: " + songLocation);
