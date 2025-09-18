@@ -10,5 +10,11 @@
     "sounds": [
       "goonblock:effects/jumpscareSfx"
     ]
+  },
+  "effects.clickerSfx": {
+    "category": "master",
+    "sounds": [
+      "goonblock:effects/clickerSfx"
+    ]
   }
 }

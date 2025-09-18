@@ -14,8 +14,10 @@ import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -188,5 +190,101 @@ public class GoonblockFunctions {
         double c1 = 1.70158;
         double c3 = c1 + 1;
         return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
+    }
+
+    /**
+     * A more advanced version that correctly finds and replaces text within a complex
+     * IChatComponent, even if the target text is only a part of a larger styled component.
+     * It will split components if necessary to preserve surrounding text.
+     *
+     * @param sourceComponent The original chat component.
+     * @param textToFind      The plain text to search for.
+     * @param replacementText The plain text to replace it with.
+     * @return A new, modified IChatComponent, or null if the text was not found.
+     */
+    public static IChatComponent findAndReplaceInComponent(IChatComponent sourceComponent, String textToFind, String replacementText) {
+        // Step 1: Flatten and get the full text to find the match location.
+        List<IChatComponent> flattenedParts = flattenComponent(sourceComponent);
+        StringBuilder fullUnformattedText = new StringBuilder();
+        for (IChatComponent part : flattenedParts) {
+            fullUnformattedText.append(part.getUnformattedTextForChat());
+        }
+
+        int startIndex = fullUnformattedText.toString().indexOf(textToFind);
+        if (startIndex == -1) {
+            return null; // Target text not found.
+        }
+        int endIndex = startIndex + textToFind.length();
+
+        // --- NEW, MORE ROBUST RECONSTRUCTION LOGIC ---
+        IChatComponent finalMessage = new ChatComponentText("");
+        int currentCharIndex = 0;
+        boolean replacementAdded = false;
+
+        for (IChatComponent part : flattenedParts) {
+            String partText = part.getUnformattedTextForChat();
+            int partStartIndex = currentCharIndex;
+            int partEndIndex = currentCharIndex + partText.length();
+
+            // Case 1: The entire component is before the replacement zone.
+            if (partEndIndex <= startIndex) {
+                finalMessage.appendSibling(part.createCopy());
+            }
+            // Case 2: The entire component is after the replacement zone.
+            else if (partStartIndex >= endIndex) {
+                finalMessage.appendSibling(part.createCopy());
+            }
+            // Case 3: This component intersects with the replacement zone. This is the complex case.
+            else {
+                // A. Add the part of the text that comes BEFORE the replacement zone.
+                if (partStartIndex < startIndex) {
+                    String beforeText = partText.substring(0, startIndex - partStartIndex);
+                    IChatComponent beforeComponent = new ChatComponentText(beforeText);
+                    beforeComponent.setChatStyle(part.getChatStyle());
+                    finalMessage.appendSibling(beforeComponent);
+                }
+
+                // B. Add our new replacement text, but only ONCE.
+                if (!replacementAdded) {
+                    IChatComponent replacementComponent = new ChatComponentText(replacementText);
+                    // Copy the style from the first component we're replacing to blend in.
+                    replacementComponent.setChatStyle(part.getChatStyle());
+                    finalMessage.appendSibling(replacementComponent);
+                    replacementAdded = true;
+                }
+
+                // C. Add the part of the text that comes AFTER the replacement zone.
+                if (partEndIndex > endIndex) {
+                    String afterText = partText.substring(endIndex - partStartIndex);
+                    IChatComponent afterComponent = new ChatComponentText(afterText);
+                    afterComponent.setChatStyle(part.getChatStyle());
+                    finalMessage.appendSibling(afterComponent);
+                }
+            }
+            currentCharIndex = partEndIndex;
+        }
+
+        return finalMessage;
+    }
+
+    /**
+     * Correctly deconstructs a complex, nested IChatComponent into a flat, ordered list
+     * of its final, text-bearing parts. This uses the component's iterator, which is the
+     * proper way to traverse the structure.
+     *
+     * @param component The root component to flatten.
+     * @return A List of all styled components in the correct order.
+     */
+    public static List<IChatComponent> flattenComponent(IChatComponent component) {
+        List<IChatComponent> parts = new ArrayList<>();
+        // IChatComponent is Iterable, and its iterator correctly traverses the entire tree.
+        for (IChatComponent part : (Iterable<IChatComponent>) component) {
+            // We only care about the parts that actually have text, to avoid empty nodes.
+            // We use getUnformattedTextForChat() as it's the most direct representation of a component's own text.
+            if (part.getUnformattedTextForChat() != null && !part.getUnformattedTextForChat().isEmpty()) {
+                parts.add(part);
+            }
+        }
+        return parts;
     }
 }

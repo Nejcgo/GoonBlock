@@ -18,7 +18,6 @@ public class WaifuOverlayRenderer extends Gui {
 
     private final Minecraft mc;
     private final BloodRushManager manager;
-    // No single waifuTexture anymore, it's dynamic
 
     public WaifuOverlayRenderer(BloodRushManager manager) {
         this.mc = Minecraft.getMinecraft();
@@ -33,25 +32,22 @@ public class WaifuOverlayRenderer extends Gui {
 
         if (manager.shouldShowWaifu()) {
             RoastProfile roastProfile = manager.getCurrentRoastProfile();
-            if (roastProfile == null) return; // Should not happen if shouldShowWaifu is true, but good practice
+            if (roastProfile == null) return;
 
             ScaledResolution scaledResolution = new ScaledResolution(mc);
             int screenWidth = scaledResolution.getScaledWidth();
             int screenHeight = scaledResolution.getScaledHeight();
 
-            // Construct dynamic texture path
-            // e.g., "goonblock:textures/gui/asuna/happy.png"
             ResourceLocation currentExpressionTexture = new ResourceLocation(
                     GoonBlock.MODID,
                     "textures/gui/" + manager.getCurrentWaifuName() + "/" + roastProfile.getExpressionKey() + ".png"
             );
 
-            // --- Render Waifu Image ---
             GlStateManager.pushMatrix();
-            GlStateManager.enableAlpha(); // Use alpha for proper transparency blending
+            GlStateManager.enableAlpha();
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F); // Reset color tint
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
             mc.getTextureManager().bindTexture(currentExpressionTexture);
 
@@ -60,20 +56,17 @@ public class WaifuOverlayRenderer extends Gui {
             int waifuX = screenWidth - waifuWidth - 20;
             int waifuY = screenHeight / 2 - waifuHeight / 2;
 
-            // Draw the texture
             Gui.drawScaledCustomSizeModalRect(waifuX, waifuY, 0, 0, waifuWidth, waifuHeight, waifuWidth, waifuHeight, waifuWidth, waifuHeight);
 
             GlStateManager.disableBlend();
             GlStateManager.disableAlpha();
             GlStateManager.popMatrix();
 
-            // --- Render Roast Text ---
             String roastText = roastProfile.getText();
             if (roastText != null && !roastText.isEmpty()) {
-                int textMaxWidth = screenWidth / 3; // Max width for text before wrapping
-                int textX = waifuX - 10; // Position text to the left of the waifu, anchor right
+                int textMaxWidth = screenWidth / 3;
+                int textX = waifuX - 10;
 
-                // Simple auto-wrapping (split by space)
                 List<String> lines = new ArrayList<>();
                 String[] words = roastText.split(" ");
                 StringBuilder currentLine = new StringBuilder();
@@ -102,9 +95,9 @@ public class WaifuOverlayRenderer extends Gui {
                     int bubbleX = textX - widestLine - padding; // Adjusted for right-alignment
                     int bubbleY = textY - padding;
                     int bubbleWidth = widestLine + (padding * 2);
-                    int bubbleHeight = totalTextHeight + (padding * 2) - (lines.size() > 1 ? 2 * (lines.size()-1) : 0) ; // Adjust for line spacing
+                    int bubbleHeight = totalTextHeight + (padding * 2) - (lines.size() > 1 ? 2 * (lines.size()-1) : 0) ;
 
-                    drawRect(bubbleX, bubbleY, bubbleX + bubbleWidth, bubbleY + bubbleHeight, 0xCC000000); // Semi-transparent black
+                    drawRect(bubbleX, bubbleY, bubbleX + bubbleWidth, bubbleY + bubbleHeight, 0xCC000000);
                 }
 
 
@@ -112,7 +105,7 @@ public class WaifuOverlayRenderer extends Gui {
                 for (String line : lines) {
                     int lineWidth = mc.fontRendererObj.getStringWidth(line);
                     mc.fontRendererObj.drawStringWithShadow(line, textX - lineWidth, currentY, 0xFFFFFF);
-                    currentY += mc.fontRendererObj.FONT_HEIGHT + 2; // Add a little line spacing
+                    currentY += mc.fontRendererObj.FONT_HEIGHT + 2;
                 }
             }
         }

@@ -124,6 +124,6 @@ public class CustomSongSelect extends GuiScreen {
     @Override
     public void onGuiClosed() {
         MinecraftForge.EVENT_BUS.unregister(this);
-        System.out.println("Custom Harp GUI Closed.");
+        System.out.println("Custom Harp select Closed.");
     }
 }

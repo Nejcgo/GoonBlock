@@ -1,21 +1,16 @@
 package com.github.nejcgo.goonblock.util;
 
 import com.github.nejcgo.goonblock.GoonBlock;
+import com.github.nejcgo.goonblock.classes.GoonBlockConfig;
 import com.github.nejcgo.goonblock.classes.Script;
 import com.github.nejcgo.goonblock.client.gui.ScriptRenderer;
 import com.google.gson.Gson;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import javax.swing.*;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 public class VisualNovelManager {
     private Gson gson = new Gson();
@@ -46,10 +41,10 @@ public class VisualNovelManager {
 
                         mc.addScheduledTask(this::showWelcomeScript);
 
-                        GoonBlock.hasShownFirstTimeMessage = true;
+                        GoonBlockConfig.hasShownFirstTimeMessage = true;
 
-                        //GoonBlock.config.get("general", "hasShownFirstTimeMessage", false).set(true);
-                        //GoonBlock.config.save();
+                        GoonBlockConfig.config.get("general", "hasShownFirstTimeMessage", false).set(true);
+                        GoonBlockConfig.config.save();
                     }
                 } catch (Exception e) {
                     System.err.println("Uh oh, something happened! Reason: " + e);
