@@ -3,9 +3,7 @@ package com.github.nejcgo.goonblock;
 import com.github.nejcgo.goonblock.classes.GoonBlockConfig;
 import com.github.nejcgo.goonblock.client.gui.*;
 import com.github.nejcgo.goonblock.commands.ConfigCommand;
-import com.github.nejcgo.goonblock.event.GoodJobListener;
-import com.github.nejcgo.goonblock.event.JumpscareListener;
-import com.github.nejcgo.goonblock.event.MelodyListener;
+import com.github.nejcgo.goonblock.event.*;
 import com.github.nejcgo.goonblock.util.CustomSongManager;
 import com.github.nejcgo.goonblock.util.NPCSkinChanger;
 import com.github.nejcgo.goonblock.util.VisualNovelManager;
@@ -25,7 +23,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-import com.github.nejcgo.goonblock.event.BloodRushListener;
 import com.github.nejcgo.goonblock.util.BloodRushManager;
 
 import java.io.File;
@@ -85,6 +82,7 @@ public class GoonBlock {
         MinecraftForge.EVENT_BUS.register(new NPCSkinChanger());
         MinecraftForge.EVENT_BUS.register(new VisualNovelManager());
         MinecraftForge.EVENT_BUS.register(new GoodJobListener());
+        MinecraftForge.EVENT_BUS.register(new RiftEnterListener());
 
         MoulConfigProcessor<GoonBlockConfig> processor = new MoulConfigProcessor<>(goonBlockConfig);
 

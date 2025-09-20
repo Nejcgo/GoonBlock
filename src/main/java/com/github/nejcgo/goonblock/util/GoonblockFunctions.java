@@ -3,6 +3,8 @@ package com.github.nejcgo.goonblock.util;
 import jline.internal.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -17,9 +19,8 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.lang.reflect.Field;
+import java.util.*;
 
 public class GoonblockFunctions {
 
@@ -286,5 +287,53 @@ public class GoonblockFunctions {
             }
         }
         return parts;
+    }
+
+    // A static field to cache the Field object for performance
+    private static Field playerInfoMapField = null;
+
+    /**
+     * Uses reflection to safely add a NetworkPlayerInfo object to the client's private playerInfoMap.
+     * @param netHandler The client's NetHandlerPlayClient instance.
+     * @param uuid The UUID of the player/NPC to add.
+     * @param playerInfo The NetworkPlayerInfo object to add.
+     */
+    public static void addPlayerInfo(NetHandlerPlayClient netHandler, UUID uuid, NetworkPlayerInfo playerInfo) {
+        try {
+            // Find the private "playerInfoMap" field if we haven't already
+            if (playerInfoMapField == null) {
+                playerInfoMapField = NetHandlerPlayClient.class.getDeclaredField("playerInfoMap");
+                // Make the private field accessible
+                playerInfoMapField.setAccessible(true);
+            }
+            // Get the actual Map object from the NetHandler instance
+            Map<UUID, NetworkPlayerInfo> map = (Map<UUID, NetworkPlayerInfo>) playerInfoMapField.get(netHandler);
+            // Now, we can safely call .put() on the real map
+            map.put(uuid, playerInfo);
+        } catch (Exception e) {
+            System.err.println("GoonBlock: Failed to add player info via reflection!");
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Uses reflection to safely remove a NetworkPlayerInfo object from the client's private playerInfoMap.
+     * @param netHandler The client's NetHandlerPlayClient instance.
+     * @param uuid The UUID of the player/NPC to remove.
+     */
+    public static void removePlayerInfo(NetHandlerPlayClient netHandler, UUID uuid) {
+        try {
+            // We assume the field is already cached by the add method, but check again just in case.
+            if (playerInfoMapField == null) {
+                playerInfoMapField = NetHandlerPlayClient.class.getDeclaredField("playerInfoMap");
+                playerInfoMapField.setAccessible(true);
+            }
+            Map<UUID, NetworkPlayerInfo> map = (Map<UUID, NetworkPlayerInfo>) playerInfoMapField.get(netHandler);
+            // Safely call .remove() on the real map
+            map.remove(uuid);
+        } catch (Exception e) {
+            System.err.println("GoonBlock: Failed to remove player info via reflection!");
+            e.printStackTrace();
+        }
     }
 }
